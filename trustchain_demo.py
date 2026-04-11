@@ -1,15 +1,15 @@
 """
-TrustChain — Full End-to-End Integration
-==========================================
+TrustChain — Full End-to-End Integration Demo
+===============================================
 Flow:
-    1. Register AI model on blockchain
-    2. Doctor submits patient data
-    3. XGBoost + SHAP AI predicts disease
-    4. Prediction logged to Ethereum LIVE
-    5. Transaction appears on Etherscan
+    1. Doctor enters patient data
+    2. XGBoost + SHAP AI predicts disease
+    3. Prediction automatically logged to Ethereum
+    4. Transaction appears on Etherscan LIVE
+    5. Permanently recorded forever
 
 Author: Harish Anand (CSE 540 - ASU, Spring B 2026)
-Contract: 0xe767907b979525F487F89abF2df46628B81C9791 (Sepolia)
+Contract: 0x131Ccce9a72646fA78A07772Ba2b543249260956 (Sepolia)
 """
 
 import os
@@ -53,6 +53,113 @@ CONTRACT_ABI = [
 ]
 
 # ---------------------------------------------------------------
+# 10 DIVERSE TEST PATIENTS
+# ---------------------------------------------------------------
+
+PATIENTS = [
+    {
+        "name": "Sarah, 50yr — High Risk",
+        "icon": "🔴",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 6, "glucose": 148, "blood_pressure": 72,
+            "skin_thickness": 35, "insulin": 0, "bmi": 33.6,
+            "diabetes_pedigree": 0.627, "age": 50
+        }
+    },
+    {
+        "name": "John, 31yr — Low Risk",
+        "icon": "🟢",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 1, "glucose": 85, "blood_pressure": 66,
+            "skin_thickness": 29, "insulin": 0, "bmi": 26.6,
+            "diabetes_pedigree": 0.351, "age": 31
+        }
+    },
+    {
+        "name": "Maria, 45yr — Medium Risk",
+        "icon": "🟡",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 3, "glucose": 120, "blood_pressure": 70,
+            "skin_thickness": 25, "insulin": 100, "bmi": 30.5,
+            "diabetes_pedigree": 0.450, "age": 45
+        }
+    },
+    {
+        "name": "David, 62yr — Very High Risk",
+        "icon": "🔴",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 8, "glucose": 183, "blood_pressure": 64,
+            "skin_thickness": 0, "insulin": 0, "bmi": 23.3,
+            "diabetes_pedigree": 0.672, "age": 62
+        }
+    },
+    {
+        "name": "Emma, 25yr — Healthy",
+        "icon": "🟢",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 0, "glucose": 90, "blood_pressure": 60,
+            "skin_thickness": 20, "insulin": 80, "bmi": 22.1,
+            "diabetes_pedigree": 0.200, "age": 25
+        }
+    },
+    {
+        "name": "Robert, 55yr — High Risk",
+        "icon": "🔴",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 5, "glucose": 166, "blood_pressure": 72,
+            "skin_thickness": 19, "insulin": 175, "bmi": 25.8,
+            "diabetes_pedigree": 0.587, "age": 55
+        }
+    },
+    {
+        "name": "Lisa, 35yr — Low Risk",
+        "icon": "🟢",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 2, "glucose": 95, "blood_pressure": 68,
+            "skin_thickness": 22, "insulin": 60, "bmi": 24.5,
+            "diabetes_pedigree": 0.280, "age": 35
+        }
+    },
+    {
+        "name": "James, 48yr — Medium Risk",
+        "icon": "🟡",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 4, "glucose": 130, "blood_pressure": 75,
+            "skin_thickness": 28, "insulin": 120, "bmi": 28.9,
+            "diabetes_pedigree": 0.380, "age": 48
+        }
+    },
+    {
+        "name": "Priya, 40yr — Borderline",
+        "icon": "🟡",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 2, "glucose": 115, "blood_pressure": 65,
+            "skin_thickness": 24, "insulin": 90, "bmi": 27.3,
+            "diabetes_pedigree": 0.320, "age": 40
+        }
+    },
+    {
+        "name": "Michael, 70yr — Very High Risk",
+        "icon": "🔴",
+        "role": "Patient",
+        "data": {
+            "pregnancies": 10, "glucose": 197, "blood_pressure": 70,
+            "skin_thickness": 45, "insulin": 543, "bmi": 30.5,
+            "diabetes_pedigree": 0.158, "age": 70
+        }
+    },
+]
+
+# ---------------------------------------------------------------
 # CONNECT
 # ---------------------------------------------------------------
 
@@ -70,56 +177,19 @@ def connect():
         address=Web3.to_checksum_address(CONTRACT_ADDRESS),
         abi=CONTRACT_ABI
     )
-    print(f"✅ Contract loaded: {CONTRACT_ADDRESS}")
+    print(f"✅ Contract: {CONTRACT_ADDRESS}")
     return w3, contract
 
 # ---------------------------------------------------------------
-# SEND TX
-# ---------------------------------------------------------------
-
-def send_tx(w3, tx, label):
-    account   = w3.eth.account.from_key(PRIVATE_KEY)
-    signed    = w3.eth.account.sign_transaction(tx, PRIVATE_KEY)
-    tx_hash   = w3.eth.send_raw_transaction(signed.raw_transaction)
-    print(f"📡 {label} tx sent: {tx_hash.hex()[:20]}...")
-    receipt   = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
-    if receipt['status'] == 1:
-        print(f"✅ {label} confirmed in block {receipt['blockNumber']}!")
-    else:
-        print(f"⚠️  {label} reverted (may already exist)")
-    return tx_hash.hex()
-
-# ---------------------------------------------------------------
-# REGISTER MODEL
-# ---------------------------------------------------------------
-
-def register_model(w3, contract, model_id):
-    print(f"\n📝 Registering model '{model_id}' on blockchain...")
-    try:
-        account = w3.eth.account.from_key(PRIVATE_KEY)
-        nonce   = w3.eth.get_transaction_count(account.address)
-        tx = contract.functions.registerModel(
-            model_id, "DiabetesDetector-XGBoost", "1.0.0"
-        ).build_transaction({
-            'from': account.address, 'nonce': nonce,
-            'gas': 200000, 'gasPrice': w3.eth.gas_price,
-        })
-        send_tx(w3, tx, "RegisterModel")
-    except Exception as e:
-        print(f"⚠️  Note: {str(e)[:80]}")
-        print("   Continuing with predictions...")
-
-# ---------------------------------------------------------------
-# LOG PREDICTION
+# LOG TO BLOCKCHAIN
 # ---------------------------------------------------------------
 
 def log_prediction(w3, contract, model_id, result):
     if not PRIVATE_KEY:
-        print("⚠️  No private key — skipping blockchain log")
         return None
     try:
-        account    = w3.eth.account.from_key(PRIVATE_KEY)
-        nonce      = w3.eth.get_transaction_count(account.address)
+        account     = w3.eth.account.from_key(PRIVATE_KEY)
+        nonce       = w3.eth.get_transaction_count(account.address)
         input_hash  = bytes.fromhex(result['input_hash'])
         output_hash = bytes.fromhex(result['output_hash'])
         confidence  = min(int(result['confidence']), 100)
@@ -130,11 +200,16 @@ def log_prediction(w3, contract, model_id, result):
             'from': account.address, 'nonce': nonce,
             'gas': 500000, 'gasPrice': w3.eth.gas_price,
         })
-        tx_hash = send_tx(w3, tx, "LogPrediction")
-        print(f"🔗 https://sepolia.etherscan.io/tx/{tx_hash}")
-        return tx_hash
+        signed  = w3.eth.account.sign_transaction(tx, PRIVATE_KEY)
+        tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
+        print(f"   📡 Tx sent: {tx_hash.hex()[:20]}...")
+        receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
+        if receipt['status'] == 1:
+            print(f"   ✅ Confirmed in block {receipt['blockNumber']}!")
+            print(f"   🔗 https://sepolia.etherscan.io/tx/{tx_hash.hex()}")
+        return tx_hash.hex()
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"   ❌ Error: {str(e)[:60]}")
         return None
 
 # ---------------------------------------------------------------
@@ -143,74 +218,66 @@ def log_prediction(w3, contract, model_id, result):
 
 def run_demo():
     print("\n" + "🔗"*30)
-    print("\n  TrustChain — Full End-to-End Demo")
-    print("  Healthcare AI + Ethereum Blockchain")
+    print("\n  TrustChain — Healthcare AI Audit Demo")
+    print("  10 Patients | XGBoost + SHAP | Ethereum")
     print("\n" + "🔗"*30)
 
     w3, contract = connect()
     MODEL_ID = "diabetes-xgboost-v1"
 
-    # Step 1: Register model
-    register_model(w3, contract, MODEL_ID)
-
-    # Step 2: Test patients
-    patients = [
-        ("HIGH RISK", "🔴", {
-            "pregnancies": 6, "glucose": 148, "blood_pressure": 72,
-            "skin_thickness": 35, "insulin": 0, "bmi": 33.6,
-            "diabetes_pedigree": 0.627, "age": 50
-        }),
-        ("LOW RISK", "🟢", {
-            "pregnancies": 1, "glucose": 85, "blood_pressure": 66,
-            "skin_thickness": 29, "insulin": 0, "bmi": 26.6,
-            "diabetes_pedigree": 0.351, "age": 31
-        }),
-    ]
-
+    results_summary = []
     tx_hashes = []
 
-    for label, icon, data in patients:
+    for i, patient in enumerate(PATIENTS, 1):
         print(f"\n{'='*60}")
-        print(f"  {icon} {label}")
+        print(f"  {patient['icon']} Patient {i}/10: {patient['name']}")
         print(f"{'='*60}")
 
         # AI Prediction
-        print(f"\n🤖 Running XGBoost + SHAP AI...")
-        result = predict(data)
+        result = predict(patient['data'])
 
-        print(f"\n📊 Results:")
         print(f"   Diagnosis:  {result['diagnosis']}")
         print(f"   Confidence: {result['confidence']}%")
         print(f"   Risk Score: {result['risk_score']}/100")
         print(f"   Risk Level: {result['risk_level']}")
 
-        print(f"\n🧠 SHAP Explanation:")
-        for i, f in enumerate(result['top_factors'], 1):
+        print(f"\n   🧠 Top SHAP Factors:")
+        for j, f in enumerate(result['top_factors'][:3], 1):
             arrow = "↑" if f['contribution'] > 0 else "↓"
-            print(f"   {i}. {f['feature']:<25} {arrow} {f['direction']}")
-
-        print(f"\n🔐 Hashes for blockchain:")
-        print(f"   Input:  {result['input_hash'][:32]}...")
-        print(f"   Output: {result['output_hash'][:32]}...")
+            print(f"   {j}. {f['feature']:<25} {arrow} {f['direction']}")
 
         # Log to blockchain
+        print(f"\n   🔐 Logging to Ethereum...")
         tx = log_prediction(w3, contract, MODEL_ID, result)
         if tx:
             tx_hashes.append(tx)
 
-        time.sleep(3)
+        results_summary.append({
+            "patient": patient['name'],
+            "diagnosis": result['diagnosis'],
+            "confidence": result['confidence'],
+            "risk": result['risk_level']
+        })
 
-    # Final summary
+        time.sleep(2)
+
+    # Final Summary
     print(f"\n{'='*60}")
     print(f"  ✅ TrustChain Demo Complete!")
     print(f"{'='*60}")
-    print(f"\n🔗 Contract on Etherscan:")
-    print(f"   https://sepolia.etherscan.io/address/{CONTRACT_ADDRESS}")
-    print(f"\n🔗 Prediction Transactions:")
-    for i, tx in enumerate(tx_hashes, 1):
-        print(f"   TX {i}: https://sepolia.etherscan.io/tx/{tx}")
-    print(f"\n✅ All AI predictions permanently recorded on Ethereum!")
+
+    print(f"\n📋 Prediction Summary:")
+    print(f"   {'Patient':<35} {'Diagnosis':<15} {'Confidence':<12} {'Risk'}")
+    print(f"   {'-'*70}")
+    for r in results_summary:
+        print(f"   {r['patient']:<35} {r['diagnosis']:<15} {r['confidence']:<12}% {r['risk']}")
+
+    print(f"\n🔗 All recorded on Ethereum:")
+    print(f"   Contract: https://sepolia.etherscan.io/address/{CONTRACT_ADDRESS}")
+    print(f"\n   {len(tx_hashes)}/10 predictions logged to blockchain!")
+    print(f"\n✅ Every prediction permanently recorded!")
     print(f"   Cannot be deleted. Cannot be tampered with.")
+    print(f"   Full audit trail available to regulators & auditors.")
 
 
 if __name__ == "__main__":
