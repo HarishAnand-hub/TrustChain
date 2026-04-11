@@ -1,0 +1,28 @@
+{
+  "name": "trustchain",
+  "version": "1.0.0",
+  "description": "> CSE 540: Engineering Blockchain Applications — Arizona State University, Spring B 2026",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarishAnand-hub/TrustChain.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/HarishAnand-hub/TrustChain/issues"
+  },
+  "homepage": "https://github.com/HarishAnand-hub/TrustChain#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0"
+  }
+}
