@@ -15,6 +15,9 @@ TrustChain fixes this by recording **every single AI event permanently on the bl
 
 The system pairs a **machine learning disease prediction model** with a **hybrid blockchain network** (Hyperledger Fabric + Ethereum) so that every AI decision gets cryptographically recorded and lives permanently on an immutable ledger. No tampering. No hiding. No excuses.
 
+## 🖥️ Dashboard Preview
+![TrustChain Auditor Dashboard](frontend/dashboard-preview.png)
+
 ---
 
 ## How It Works
