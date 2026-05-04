@@ -7,162 +7,117 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #080c12;
-      --surface: #0d1320;
-      --surface2: #111827;
-      --border: rgba(99,179,237,0.12);
-      --blue: #63b3ed;
-      --green: #68d391;
-      --red: #fc8181;
-      --amber: #f6ad55;
-      --text: #e2e8f0;
-      --muted: #4a5568;
-      --mono: 'Space Mono', monospace;
-      --sans: 'DM Sans', sans-serif;
+      --bg:#080c12; --surface:#0d1320; --surface2:#111827;
+      --border:rgba(99,179,237,0.12);
+      --blue:#63b3ed; --green:#68d391; --red:#fc8181; --amber:#f6ad55; --purple:#b794f4;
+      --text:#e2e8f0; --muted:#4a5568;
+      --mono:'Space Mono',monospace; --sans:'DM Sans',sans-serif;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; }
-
-    /* HEADER */
-    header {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:16px 32px; background:var(--surface);
-      border-bottom:1px solid var(--border);
-      position:sticky; top:0; z-index:100;
-    }
-    .logo { display:flex; align-items:center; gap:12px; }
-    .logo-icon {
-      width:36px; height:36px;
-      background:linear-gradient(135deg,#3b82f6,#06b6d4);
-      clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-    }
-    .logo-text { font-family:var(--mono); font-size:16px; font-weight:700; color:#fff; letter-spacing:1px; }
-    .logo-sub { font-size:10px; color:var(--muted); letter-spacing:2px; font-family:var(--mono); }
-    .header-right { display:flex; align-items:center; gap:12px; }
-    .pill {
-      display:flex; align-items:center; gap:6px;
-      padding:5px 12px; border-radius:20px; font-size:11px;
-      font-family:var(--mono); letter-spacing:0.5px;
-    }
-    .pill-live { background:rgba(104,211,145,0.1); border:1px solid rgba(104,211,145,0.3); color:var(--green); }
-    .pill-blue { background:rgba(99,179,237,0.1); border:1px solid rgba(99,179,237,0.3); color:var(--blue); }
-    .blink { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1.5s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
-    /* MAIN */
-    main { padding:28px 32px; max-width:1400px; margin:0 auto; }
-    .page-title { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; margin-bottom:4px; }
-    .page-heading { font-size:24px; font-weight:600; color:#fff; margin-bottom:6px; }
-    .contract-pill {
-      display:inline-flex; align-items:center; gap:8px;
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:6px; padding:6px 14px; margin-bottom:24px;
-      font-family:var(--mono); font-size:11px; color:var(--blue);
-    }
-    .contract-pill a { color:var(--blue); text-decoration:none; }
-    .contract-pill a:hover { text-decoration:underline; }
-
-    /* STATS */
-    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
-    .stat {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:12px; padding:20px; position:relative; overflow:hidden;
-    }
-    .stat::after {
-      content:''; position:absolute; top:0; left:0; right:0; height:2px;
-    }
-    .stat.blue::after { background:linear-gradient(90deg,#3b82f6,#06b6d4); }
-    .stat.green::after { background:linear-gradient(90deg,#10b981,#34d399); }
-    .stat.amber::after { background:linear-gradient(90deg,#f59e0b,#fbbf24); }
-    .stat.red::after { background:linear-gradient(90deg,#ef4444,#f87171); }
-    .stat-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
-    .stat-value { font-size:32px; font-weight:600; font-family:var(--mono); }
-    .stat.blue .stat-value { color:var(--blue); }
-    .stat.green .stat-value { color:var(--green); }
-    .stat.amber .stat-value { color:var(--amber); }
-    .stat.red .stat-value { color:var(--red); }
-    .stat-sub { font-size:11px; color:var(--muted); margin-top:4px; font-family:var(--mono); }
-
-    /* GRID */
-    .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
-
-    /* CARD */
-    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-    .card-header {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 20px; border-bottom:1px solid var(--border);
-    }
-    .card-title { font-family:var(--mono); font-size:12px; color:var(--text); letter-spacing:1px; }
-    .badge {
-      font-family:var(--mono); font-size:10px; padding:3px 8px;
-      border-radius:4px; letter-spacing:0.5px;
-    }
-    .badge-blue { background:rgba(99,179,237,0.1); color:var(--blue); border:1px solid rgba(99,179,237,0.2); }
-    .badge-green { background:rgba(104,211,145,0.1); color:var(--green); border:1px solid rgba(104,211,145,0.2); }
-    .badge-amber { background:rgba(246,173,85,0.1); color:var(--amber); border:1px solid rgba(246,173,85,0.2); }
-
-    /* TABLE */
-    table { width:100%; border-collapse:collapse; }
-    th { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; padding:10px 20px; text-align:left; border-bottom:1px solid var(--border); }
-    td { padding:11px 20px; font-size:12px; font-family:var(--mono); border-bottom:1px solid rgba(30,42,58,0.4); color:#94a3b8; }
-    tr:last-child td { border-bottom:none; }
-    tr:hover td { background:rgba(99,179,237,0.03); }
-    .tx-link { color:var(--blue); text-decoration:none; }
-    .tx-link:hover { text-decoration:underline; }
-
-    /* PATIENTS */
-    .patients { padding:4px 0; }
-    .patient {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:11px 20px; border-bottom:1px solid rgba(30,42,58,0.4);
-      transition:background 0.15s;
-    }
-    .patient:last-child { border-bottom:none; }
-    .patient:hover { background:rgba(99,179,237,0.03); }
-    .pinfo { display:flex; align-items:center; gap:10px; }
-    .av { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; font-family:var(--mono); }
-    .av-r { background:rgba(252,129,129,0.15); color:var(--red); }
-    .av-g { background:rgba(104,211,145,0.15); color:var(--green); }
-    .av-a { background:rgba(246,173,85,0.15); color:var(--amber); }
-    .pname { font-size:13px; color:var(--text); font-weight:500; }
-    .pmeta { font-size:10px; color:var(--muted); font-family:var(--mono); margin-top:2px; }
-    .pright { text-align:right; }
-    .diag { font-size:11px; font-weight:700; font-family:var(--mono); letter-spacing:0.5px; }
-    .d-yes { color:var(--red); }
-    .d-no { color:var(--green); }
-    .conf { font-size:10px; color:var(--muted); font-family:var(--mono); margin-top:2px; }
-    .bar-wrap { display:flex; align-items:center; gap:8px; }
-    .bar { width:48px; height:3px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; }
-    .bar-fill { height:100%; background:linear-gradient(90deg,#10b981,#3b82f6); border-radius:2px; }
-
-    /* LOADING */
-    .loading { padding:40px 20px; text-align:center; color:var(--muted); font-family:var(--mono); font-size:12px; }
-    .spinner { display:inline-block; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:12px; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-
-    /* CHAIN STATUS */
-    .chain-bar { display:flex; gap:20px; padding:12px 20px; border-top:1px solid var(--border); }
-    .chain-item { display:flex; align-items:center; gap:7px; font-size:10px; font-family:var(--mono); color:var(--muted); letter-spacing:0.5px; }
-    .cd { width:6px; height:6px; border-radius:50%; animation:blink 2s infinite; }
-    .cd-g { background:var(--green); }
-    .cd-b { background:var(--blue); animation-delay:0.5s; }
-    .cd-a { background:var(--amber); }
-
-    /* ERROR */
-    .error { padding:20px; text-align:center; color:var(--red); font-family:var(--mono); font-size:11px; }
-
-    .full { margin-bottom:20px; }
-    .r-high { color:var(--red); }
-    .r-med { color:var(--amber); }
-    .r-low { color:var(--green); }
-
-    /* REFRESH */
-    .refresh-btn {
-      background:none; border:1px solid var(--border); color:var(--muted);
-      padding:4px 10px; border-radius:6px; font-family:var(--mono); font-size:10px;
-      cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
-    }
-    .refresh-btn:hover { border-color:var(--blue); color:var(--blue); }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+    header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+    .logo{display:flex;align-items:center;gap:12px;}
+    .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#06b6d4);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);}
+    .logo-text{font-family:var(--mono);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px;}
+    .logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;font-family:var(--mono);}
+    .header-right{display:flex;align-items:center;gap:12px;}
+    .pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-family:var(--mono);letter-spacing:0.5px;}
+    .pill-live{background:rgba(104,211,145,0.1);border:1px solid rgba(104,211,145,0.3);color:var(--green);}
+    .pill-blue{background:rgba(99,179,237,0.1);border:1px solid rgba(99,179,237,0.3);color:var(--blue);}
+    .pill-purple{background:rgba(183,148,244,0.1);border:1px solid rgba(183,148,244,0.3);color:var(--purple);}
+    .blink{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+    main{padding:28px 32px;max-width:1400px;margin:0 auto;}
+    .page-title{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;}
+    .page-heading{font-size:24px;font-weight:600;color:#fff;margin-bottom:6px;}
+    .contract-row{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
+    .contract-pill{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:11px;color:var(--blue);}
+    .contract-pill a{color:var(--blue);text-decoration:none;}
+    .contract-pill a:hover{text-decoration:underline;}
+    .contract-pill.purple{color:var(--purple);border-color:rgba(183,148,244,0.2);}
+    .contract-pill.purple a{color:var(--purple);}
+    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px;}
+    .stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden;}
+    .stat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+    .stat.blue::after{background:linear-gradient(90deg,#3b82f6,#06b6d4);}
+    .stat.green::after{background:linear-gradient(90deg,#10b981,#34d399);}
+    .stat.amber::after{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+    .stat.red::after{background:linear-gradient(90deg,#ef4444,#f87171);}
+    .stat.purple::after{background:linear-gradient(90deg,#8b5cf6,#a78bfa);}
+    .stat-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+    .stat-value{font-size:28px;font-weight:600;font-family:var(--mono);}
+    .stat.blue .stat-value{color:var(--blue);}
+    .stat.green .stat-value{color:var(--green);}
+    .stat.amber .stat-value{color:var(--amber);}
+    .stat.red .stat-value{color:var(--red);}
+    .stat.purple .stat-value{color:var(--purple);}
+    .stat-sub{font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--mono);}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+    .card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);}
+    .card-title{font-family:var(--mono);font-size:12px;color:var(--text);letter-spacing:1px;}
+    .badge{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:0.5px;}
+    .badge-blue{background:rgba(99,179,237,0.1);color:var(--blue);border:1px solid rgba(99,179,237,0.2);}
+    .badge-green{background:rgba(104,211,145,0.1);color:var(--green);border:1px solid rgba(104,211,145,0.2);}
+    .badge-amber{background:rgba(246,173,85,0.1);color:var(--amber);border:1px solid rgba(246,173,85,0.2);}
+    .badge-purple{background:rgba(183,148,244,0.1);color:var(--purple);border:1px solid rgba(183,148,244,0.2);}
+    .badge-red{background:rgba(252,129,129,0.1);color:var(--red);border:1px solid rgba(252,129,129,0.2);}
+    table{width:100%;border-collapse:collapse;}
+    th{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;padding:10px 20px;text-align:left;border-bottom:1px solid var(--border);}
+    td{padding:11px 20px;font-size:12px;font-family:var(--mono);border-bottom:1px solid rgba(30,42,58,0.4);color:#94a3b8;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:rgba(99,179,237,0.03);}
+    .tx-link{color:var(--blue);text-decoration:none;}
+    .tx-link:hover{text-decoration:underline;}
+    .patients{padding:4px 0;}
+    .patient{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid rgba(30,42,58,0.4);transition:background 0.15s;}
+    .patient:last-child{border-bottom:none;}
+    .patient:hover{background:rgba(99,179,237,0.03);}
+    .pinfo{display:flex;align-items:center;gap:10px;}
+    .av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:var(--mono);}
+    .av-r{background:rgba(252,129,129,0.15);color:var(--red);}
+    .av-g{background:rgba(104,211,145,0.15);color:var(--green);}
+    .av-a{background:rgba(246,173,85,0.15);color:var(--amber);}
+    .av-p{background:rgba(183,148,244,0.15);color:var(--purple);}
+    .pname{font-size:13px;color:var(--text);font-weight:500;}
+    .pmeta{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+    .pright{text-align:right;}
+    .diag{font-size:11px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;}
+    .d-yes{color:var(--red);}
+    .d-no{color:var(--green);}
+    .conf{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+    .bar-wrap{display:flex;align-items:center;gap:8px;}
+    .bar{width:48px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+    .bar-fill{height:100%;background:linear-gradient(90deg,#10b981,#3b82f6);border-radius:2px;}
+    .loading{padding:40px 20px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:12px;}
+    .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:12px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .chain-bar{display:flex;gap:20px;padding:12px 20px;border-top:1px solid var(--border);}
+    .chain-item{display:flex;align-items:center;gap:7px;font-size:10px;font-family:var(--mono);color:var(--muted);letter-spacing:0.5px;}
+    .cd{width:6px;height:6px;border-radius:50%;animation:blink 2s infinite;}
+    .cd-g{background:var(--green);}
+    .cd-b{background:var(--blue);animation-delay:0.5s;}
+    .cd-a{background:var(--amber);}
+    .cd-p{background:var(--purple);animation-delay:1s;}
+    .full{margin-bottom:20px;}
+    .r-high{color:var(--red);}
+    .r-med{color:var(--amber);}
+    .r-low{color:var(--green);}
+    .r-purple{color:var(--purple);}
+    .refresh-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
+    .refresh-btn:hover{border-color:var(--blue);color:var(--blue);}
+    .approval-item{padding:14px 20px;border-bottom:1px solid rgba(30,42,58,0.4);}
+    .approval-item:last-child{border-bottom:none;}
+    .approval-item:hover{background:rgba(183,148,244,0.03);}
+    .approval-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+    .approval-title{font-family:var(--mono);font-size:12px;color:var(--text);}
+    .approval-meta{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px;}
+    .sig-progress{display:flex;align-items:center;gap:8px;}
+    .sig-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+    .sig-done{background:rgba(104,211,145,0.2);color:var(--green);border:1px solid rgba(104,211,145,0.3);}
+    .sig-pending{background:rgba(246,173,85,0.1);color:var(--amber);border:1px solid rgba(246,173,85,0.3);}
+    .sig-line{flex:1;height:2px;background:linear-gradient(90deg,var(--green),rgba(246,173,85,0.3));}
   </style>
 </head>
 <body>
@@ -177,6 +132,7 @@
   </div>
   <div class="header-right">
     <div class="pill pill-live"><div class="blink"></div>ETHEREUM LIVE</div>
+    <div class="pill pill-purple">MULTISIG ACTIVE</div>
     <div class="pill pill-blue">AUDITOR // ASU-MED-01</div>
   </div>
 </header>
@@ -184,9 +140,14 @@
 <main>
   <div class="page-title">// REAL-TIME BLOCKCHAIN AUDIT</div>
   <div class="page-heading">Audit Dashboard</div>
-  <div class="contract-pill">
-    CONTRACT: <a href="https://sepolia.etherscan.io/address/0x131Ccce9a72646fA78A07772Ba2b543249260956" target="_blank">0x131Ccce9a72646fA78A07772Ba2b543249260956</a>
-    &nbsp;|&nbsp; SEPOLIA TESTNET
+
+  <div class="contract-row">
+    <div class="contract-pill">
+      AUDIT CONTRACT: <a href="https://sepolia.etherscan.io/address/0x131Ccce9a72646fA78A07772Ba2b543249260956" target="_blank">0x131Ccce9...249260956</a>
+    </div>
+    <div class="contract-pill purple">
+      MULTISIG CONTRACT: <a href="https://sepolia.etherscan.io/address/0xcc33595E34914898bE58a86Ae7BEe20EACB3495d" target="_blank">0xcc33595E...CB3495d</a>
+    </div>
   </div>
 
   <div class="stats">
@@ -210,10 +171,14 @@
       <div class="stat-value">4</div>
       <div class="stat-sub">patients flagged</div>
     </div>
+    <div class="stat purple">
+      <div class="stat-label">Pending Sigs</div>
+      <div class="stat-value">1</div>
+      <div class="stat-sub">awaiting Doctor 2</div>
+    </div>
   </div>
 
   <div class="grid">
-
     <!-- LIVE TRANSACTIONS -->
     <div class="card">
       <div class="card-header">
@@ -239,12 +204,46 @@
         <div class="badge badge-green">10 DIAGNOSED</div>
       </div>
       <div class="patients">
-        <div class="patient"><div class="pinfo"><div class="av av-r">MK</div><div><div class="pname">Michael K.</div><div class="pmeta">70yr · Glucose: 197 · BMI: 30.5</div></div></div><div class="pright"><div class="diag d-yes">DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:96%"></div></div>95.83%</div></div></div></div>
-        <div class="patient"><div class="pinfo"><div class="av av-r">RS</div><div><div class="pname">Robert S.</div><div class="pmeta">55yr · Glucose: 166 · BMI: 25.8</div></div></div><div class="pright"><div class="diag d-yes">DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:88%"></div></div>87.50%</div></div></div></div>
+        <div class="patient"><div class="pinfo"><div class="av av-r">MK</div><div><div class="pname">Michael K.</div><div class="pmeta">70yr · Glucose: 197 · BMI: 30.5 · <span style="color:var(--purple)">MULTISIG REQ</span></div></div></div><div class="pright"><div class="diag d-yes">DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:96%"></div></div>95.83%</div></div></div></div>
+        <div class="patient"><div class="pinfo"><div class="av av-r">RS</div><div><div class="pname">Robert S.</div><div class="pmeta">55yr · Glucose: 166 · BMI: 25.8 · <span style="color:var(--purple)">MULTISIG REQ</span></div></div></div><div class="pright"><div class="diag d-yes">DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:88%"></div></div>87.50%</div></div></div></div>
         <div class="patient"><div class="pinfo"><div class="av av-r">JB</div><div><div class="pname">James B.</div><div class="pmeta">48yr · Glucose: 130 · BMI: 28.9</div></div></div><div class="pright"><div class="diag d-yes">DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:66%"></div></div>65.88%</div></div></div></div>
         <div class="patient"><div class="pinfo"><div class="av av-r">SM</div><div><div class="pname">Sarah M.</div><div class="pmeta">50yr · Glucose: 148 · BMI: 33.6</div></div></div><div class="pright"><div class="diag d-yes">DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:60%"></div></div>59.79%</div></div></div></div>
         <div class="patient"><div class="pinfo"><div class="av av-g">EW</div><div><div class="pname">Emma W.</div><div class="pmeta">25yr · Glucose: 90 · BMI: 22.1</div></div></div><div class="pright"><div class="diag d-no">NO DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:100%"></div></div>99.65%</div></div></div></div>
         <div class="patient"><div class="pinfo"><div class="av av-g">JL</div><div><div class="pname">John L.</div><div class="pmeta">31yr · Glucose: 85 · BMI: 26.6</div></div></div><div class="pright"><div class="diag d-no">NO DIABETES</div><div class="conf"><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:99%"></div></div>99.14%</div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTISIG APPROVALS -->
+  <div class="card full">
+    <div class="card-header">
+      <div class="card-title">MULTI-SIG APPROVAL QUEUE — HIGH RISK DIAGNOSES</div>
+      <div class="badge badge-purple">2 DOCTORS REQUIRED</div>
+    </div>
+    <div class="approval-item">
+      <div class="approval-header">
+        <div class="approval-title">Request #1 — Michael K. (70yr) · Diabetes · 95.83% confidence</div>
+        <div class="badge badge-amber">PENDING 1/2</div>
+      </div>
+      <div class="approval-meta">Model: diabetes-xgboost-v1 · Created: 22 days ago · <a class="tx-link" href="https://sepolia.etherscan.io/address/0xcc33595E34914898bE58a86Ae7BEe20EACB3495d" target="_blank">View on Etherscan ↗</a></div>
+      <div class="sig-progress">
+        <div class="sig-dot sig-done">✓</div>
+        <div class="sig-line"></div>
+        <div class="sig-dot sig-pending">?</div>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:8px;">Doctor 1 signed · Waiting for Doctor 2</span>
+      </div>
+    </div>
+    <div class="approval-item">
+      <div class="approval-header">
+        <div class="approval-title">Request #2 — Robert S. (55yr) · Diabetes · 87.50% confidence</div>
+        <div class="badge badge-amber">PENDING 0/2</div>
+      </div>
+      <div class="approval-meta">Model: diabetes-xgboost-v1 · Created: 22 days ago · <a class="tx-link" href="https://sepolia.etherscan.io/address/0xcc33595E34914898bE58a86Ae7BEe20EACB3495d" target="_blank">View on Etherscan ↗</a></div>
+      <div class="sig-progress">
+        <div class="sig-dot sig-pending">?</div>
+        <div class="sig-line" style="background:rgba(246,173,85,0.2);"></div>
+        <div class="sig-dot sig-pending">?</div>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:8px;">Waiting for 2 doctor signatures</span>
       </div>
     </div>
   </div>
@@ -256,10 +255,11 @@
       <div class="badge badge-green">LIVE</div>
     </div>
     <table>
-      <thead><tr><th>Network</th><th>Contract</th><th>Total Txns</th><th>Last Block</th><th>Status</th></tr></thead>
+      <thead><tr><th>Network</th><th>Contract</th><th>Type</th><th>Total Txns</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td>Ethereum Sepolia</td><td><a class="tx-link" href="https://sepolia.etherscan.io/address/0x131Ccce9a72646fA78A07772Ba2b543249260956" target="_blank">0x131Ccce9...249260956</a></td><td id="t-txns">—</td><td id="t-block">—</td><td class="r-low">● ACTIVE</td></tr>
-        <tr><td>Hyperledger Fabric</td><td>trustchain-channel</td><td>—</td><td>—</td><td class="r-med">● IN PROGRESS</td></tr>
+        <tr><td>Ethereum Sepolia</td><td><a class="tx-link" href="https://sepolia.etherscan.io/address/0x131Ccce9a72646fA78A07772Ba2b543249260956" target="_blank">0x131Ccce9...249260956</a></td><td>Audit Trail</td><td id="t-txns">27+</td><td class="r-low">● ACTIVE</td></tr>
+        <tr><td>Ethereum Sepolia</td><td><a class="tx-link" href="https://sepolia.etherscan.io/address/0xcc33595E34914898bE58a86Ae7BEe20EACB3495d" target="_blank">0xcc33595E...CB3495d</a></td><td>MultiSig Approval</td><td>5+</td><td class="r-purple">● ACTIVE</td></tr>
+        <tr><td>Hyperledger Fabric</td><td>trustchain-channel</td><td>Private Ledger</td><td>—</td><td class="r-med">● IN PROGRESS</td></tr>
       </tbody>
     </table>
   </div>
@@ -276,69 +276,45 @@ async function loadTransactions() {
     const url = `${ETHERSCAN_API}?module=account&action=txlist&address=${CONTRACT}&startblock=0&endblock=99999999&page=1&offset=20&sort=desc&apikey=YourApiKeyToken`;
     const res = await fetch(url);
     const data = await res.json();
-
     if (data.status === "1" && data.result.length > 0) {
       const txs = data.result;
       document.getElementById("s-txns").textContent = txs.length;
       document.getElementById("s-conf").textContent = txs[0].confirmations;
       document.getElementById("s-block").textContent = txs[0].blockNumber;
       document.getElementById("t-txns").textContent = txs.length;
-      document.getElementById("t-block").textContent = txs[0].blockNumber;
-
       let html = '<table><thead><tr><th>TX HASH</th><th>METHOD</th><th>BLOCK</th><th>AGE</th><th>STATUS</th></tr></thead><tbody>';
       txs.slice(0, 10).forEach(tx => {
         const age = Math.floor((Date.now()/1000 - parseInt(tx.timeStamp)) / 60);
         const ageStr = age < 60 ? `${age}m ago` : `${Math.floor(age/60)}h ago`;
-        const method = tx.input === "0x" ? "Transfer" : tx.input.slice(0,10);
-        const methodLabel = method === "0x98444f0e" ? "logPrediction" : method === "0x" ? "Transfer" : "registerModel";
+        const method = tx.input.slice(0,10) === "0x98444f0e" ? "logPrediction" : "registerModel";
         const status = tx.isError === "0" ? '<span class="r-low">● SUCCESS</span>' : '<span class="r-high">● FAILED</span>';
-        const shortHash = tx.hash.slice(0,10) + "...";
-        html += `<tr>
-          <td><a class="tx-link" href="https://sepolia.etherscan.io/tx/${tx.hash}" target="_blank">${shortHash}</a></td>
-          <td>${methodLabel}</td>
-          <td>${tx.blockNumber}</td>
-          <td>${ageStr}</td>
-          <td>${status}</td>
-        </tr>`;
+        html += `<tr><td><a class="tx-link" href="https://sepolia.etherscan.io/tx/${tx.hash}" target="_blank">${tx.hash.slice(0,12)}...</a></td><td>${method}</td><td>${tx.blockNumber}</td><td>${ageStr}</td><td>${status}</td></tr>`;
       });
       html += '</tbody></table>';
       document.getElementById("tx-container").innerHTML = html;
-    } else {
-      loadFallback();
-    }
-  } catch(e) {
-    loadFallback();
-  }
+    } else { loadFallback(); }
+  } catch(e) { loadFallback(); }
 }
 
 function loadFallback() {
-  document.getElementById("s-txns").textContent = "17+";
+  document.getElementById("s-txns").textContent = "27+";
   document.getElementById("s-conf").textContent = "6+";
-  document.getElementById("s-block").textContent = "10636266";
-  document.getElementById("t-txns").textContent = "17+";
-  document.getElementById("t-block").textContent = "10636266";
-
+  document.getElementById("s-block").textContent = "10636328";
   const txs = [
-    {hash:"0xf5be6663d3962c1d78ac...",method:"logPrediction",block:"10636266",age:"12h ago",status:"SUCCESS"},
-    {hash:"0x9a334d7d62bb457f7d5d...",method:"logPrediction",block:"10636265",age:"12h ago",status:"SUCCESS"},
-    {hash:"0xdd521e278358332e041a...",method:"logPrediction",block:"10636264",age:"12h ago",status:"SUCCESS"},
-    {hash:"0x040b133ec55940ee0efa...",method:"logPrediction",block:"10636262",age:"12h ago",status:"SUCCESS"},
-    {hash:"0x41a06365c21dc7d4e320...",method:"logPrediction",block:"10636261",age:"12h ago",status:"SUCCESS"},
-    {hash:"0x268052e7630b10d24918...",method:"logPrediction",block:"10636260",age:"12h ago",status:"SUCCESS"},
-    {hash:"0x080df7325a553fcf9ae4...",method:"logPrediction",block:"10636259",age:"12h ago",status:"SUCCESS"},
-    {hash:"0x7f51c3342c352ef4e8ff...",method:"logPrediction",block:"10636258",age:"12h ago",status:"SUCCESS"},
-    {hash:"0x1971441f0b747140f3fb...",method:"logPrediction",block:"10636257",age:"12h ago",status:"SUCCESS"},
-    {hash:"0xe51d8db74a8d014b29e4...",method:"logPrediction",block:"10636255",age:"12h ago",status:"SUCCESS"},
+    {hash:"0x9b71bb2d2178eb1e56ba...",method:"logPrediction",block:"10636328",age:"22d ago",ok:true},
+    {hash:"0x275044054f1ba1676608...",method:"logPrediction",block:"10636327",age:"22d ago",ok:true},
+    {hash:"0x9b263ae428b3f8e88a1f...",method:"logPrediction",block:"10636326",age:"22d ago",ok:true},
+    {hash:"0xee4fbd420f1e5b251d23...",method:"logPrediction",block:"10636324",age:"22d ago",ok:true},
+    {hash:"0x16fe07468ee671ff25cd...",method:"logPrediction",block:"10636323",age:"22d ago",ok:true},
+    {hash:"0xf5be6663d3962c1d78ac...",method:"logPrediction",block:"10636266",age:"22d ago",ok:true},
+    {hash:"0x9a334d7d62bb457f7d5d...",method:"logPrediction",block:"10636265",age:"22d ago",ok:true},
+    {hash:"0xdd521e278358332e041a...",method:"logPrediction",block:"10636264",age:"22d ago",ok:true},
+    {hash:"0x8176053dc72ca66e9660...",method:"registerModel",block:"10636193",age:"22d ago",ok:true},
+    {hash:"0xd1a58eba682dd5a5330a...",method:"logPrediction",block:"10636197",age:"22d ago",ok:true},
   ];
   let html = '<table><thead><tr><th>TX HASH</th><th>METHOD</th><th>BLOCK</th><th>AGE</th><th>STATUS</th></tr></thead><tbody>';
   txs.forEach(tx => {
-    html += `<tr>
-      <td><a class="tx-link" href="https://sepolia.etherscan.io/address/${CONTRACT}" target="_blank">${tx.hash}</a></td>
-      <td>${tx.method}</td>
-      <td>${tx.block}</td>
-      <td>${tx.age}</td>
-      <td><span class="r-low">● ${tx.status}</span></td>
-    </tr>`;
+    html += `<tr><td><a class="tx-link" href="https://sepolia.etherscan.io/address/${CONTRACT}" target="_blank">${tx.hash}</a></td><td>${tx.method}</td><td>${tx.block}</td><td>${tx.age}</td><td><span class="r-low">● SUCCESS</span></td></tr>`;
   });
   html += '</tbody></table>';
   document.getElementById("tx-container").innerHTML = html;
