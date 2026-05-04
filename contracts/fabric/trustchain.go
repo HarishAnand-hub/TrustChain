@@ -156,7 +156,7 @@ func (t *TrustChainContract) LogModelEvent(
 		ModelID:   modelID,
 		EventType: eventType,
 		Timestamp: getCurrentTimestamp(),
-		ActorID:   ctx.GetClientIdentity().GetID(), // Fabric MSP identity of caller
+		ActorID:   func() string { id, _ := ctx.GetClientIdentity().GetID(); return id }(), // Fabric MSP identity of caller
 		DataHash:  dataHash,
 	}
 
@@ -208,7 +208,7 @@ func (t *TrustChainContract) LogPrediction(
 		ModelID:   modelID,
 		EventType: "PREDICTION",
 		Timestamp: getCurrentTimestamp(),
-		ActorID:   ctx.GetClientIdentity().GetID(),
+		ActorID:   func() string { id, _ := ctx.GetClientIdentity().GetID(); return id }(),
 		DataHash:  combinedData,
 	}
 
