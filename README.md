@@ -1,310 +1,331 @@
-# TrustChain 🔗
-### A Blockchain-Powered Auditing System for Transparent and Accountable Healthcare AI
+# TrustChain ⛓️🏥
 
-> CSE 540: Engineering Blockchain Applications — Arizona State University, Spring B 2026
+> *"Every AI decision. Permanently recorded. Cryptographically proven. Forever accountable."*
 
----
-
-## Introduction
-
-TrustChain is a hybrid blockchain-based auditing system that creates an **immutable, tamper-proof audit trail** for healthcare AI models.
-
-The problem it solves is simple: hospitals use AI to diagnose patients, but nobody can verify how the AI made its decision, who modified it, or whether it was tampered with. When an AI makes a wrong diagnosis, there is no record — no accountability, no trace.
-
-TrustChain fixes this by recording **every single AI event permanently on the blockchain** — every prediction, every training run, every model update, every access — making healthcare AI fully transparent and auditable.
-
-The system pairs a **machine learning disease prediction model** with a **hybrid blockchain network** (Hyperledger Fabric + Ethereum) so that every AI decision gets cryptographically recorded and lives permanently on an immutable ledger. No tampering. No hiding. No excuses.
-
-## 🖥️ Dashboard Preview
-![TrustChain Auditor Dashboard](frontend/dashboard-preview.png)
+**CSE 540 — Engineering Blockchain Applications | Arizona State University | Spring B 2026**
+**Group 14**
 
 ---
 
-## How It Works
+## The Problem Nobody Is Talking About
 
-Here's the flow when the AI model makes a prediction:
+Hospitals are deploying AI to diagnose patients. AI is deciding who gets treatment, who gets flagged, who gets referred.
 
-1. A doctor enters patient data into the frontend dashboard
-2. The **FastAPI backend** sends the data to the AI model
-3. The AI model predicts the disease with a confidence score
-4. The backend **hashes the input and output** (never raw patient data — HIPAA compliant)
-5. The backend submits the prediction to **both blockchain layers simultaneously**:
-   - **Hyperledger Fabric** records the full private details (hospitals/regulators only)
-   - **Ethereum** records the public cryptographic proof (anyone can verify)
-6. The prediction is now **permanently recorded** — impossible to delete or tamper with
-7. Doctors, regulators, and auditors can query the **Auditor Dashboard** to see the full history
+But when the AI makes a wrong call — **nobody can prove what happened.**
+
+- What data did it use?
+- Who modified the model last night?
+- Was the confidence score tampered with?
+- Can the patient even challenge it?
+
+There is no answer. There is no record. There is no accountability.
+
+**This is the healthcare AI black box problem.**
 
 ---
 
-## Project Structure
+## Our Solution: TrustChain
+
+TrustChain creates an **immutable, tamper-proof audit trail** for every healthcare AI decision — using a hybrid blockchain architecture that nobody can alter, delete, or deny.
+
+```
+Patient Data → AI Model → Prediction + SHAP Explanation
+                                    ↓
+                          Hash(input) + Hash(output)
+                                    ↓
+                    ┌───────────────┴───────────────┐
+                    ▼                               ▼
+           Hyperledger Fabric              Ethereum Sepolia
+           (Private Ledger)               (Public Proof)
+           Hospital + Regulator           Anyone can verify
+                    │                               │
+                    └───────────────┬───────────────┘
+                                    ▼
+                          Auditor Dashboard
+                    (Live blockchain data, real-time)
+```
+
+**HIGH RISK patients** (confidence > 75%) trigger our **Multi-Signature Approval System** — requiring 2 authorized doctors to sign off before a diagnosis is finalized on-chain. **Nobody else in healthcare AI has this.**
+
+---
+
+## Live Deployments on Ethereum Sepolia
+
+| Contract | Address | Purpose |
+|---|---|---|
+| TrustChainAudit | [`0x131Ccce9a72646fA78A07772Ba2b543249260956`](https://sepolia.etherscan.io/address/0x131Ccce9a72646fA78A07772Ba2b543249260956) | Public audit trail for all AI predictions |
+| TrustChainMultiSig | [`0xcc33595E34914898bE58a86Ae7BEe20EACB3495d`](https://sepolia.etherscan.io/address/0xcc33595E34914898bE58a86Ae7BEe20EACB3495d) | Multi-sig approval for high-risk diagnoses |
+
+**27+ transactions permanently recorded. Cannot be deleted. Cannot be tampered with.**
+
+---
+
+## Dashboard Preview
+
+![TrustChain Live Dashboard](frontend/dashboard-preview.png)
+
+*Live dashboard showing real Ethereum transactions, patient diagnoses, and multi-sig approval queue.*
+
+---
+
+## What Makes TrustChain Unique
+
+### 1. Multi-Signature Approval for High-Risk Diagnoses 🔐
+When our AI predicts diabetes with > 75% confidence, the diagnosis **cannot be finalized** until two authorized doctors independently sign off on-chain. This prevents any single point of failure in high-stakes medical decisions.
+
+```
+AI: "Michael, 70yr — DIABETES — 95.83% confidence"
+          ↓
+TrustChainMultiSig.requestApproval() called on Ethereum
+          ↓
+Doctor 1 signs → DiagnosisSigned event emitted
+          ↓
+Doctor 2 signs → DiagnosisFinalized event emitted
+          ↓
+Permanently recorded. Both signatures. Both timestamps. Forever.
+```
+
+### 2. SHAP Explanation Hash on Blockchain 🧠
+We don't just record WHAT the AI decided — we hash the SHAP explanation too. So you can prove not just the diagnosis, but the reasoning behind it.
+
+### 3. Hybrid Fabric + Ethereum Architecture ⚡
+- **Fabric** (private): Full patient context, hospital-only access
+- **Ethereum** (public): Cryptographic proof anyone can verify
+- Both layers updated simultaneously on every prediction
+
+### 4. HIPAA Compliant by Design 🏛️
+Raw patient data **never** touches the blockchain. Only cryptographic hashes (SHA-256) are recorded. The actual data stays in the hospital system.
+
+---
+
+## System Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    TRUSTCHAIN SYSTEM                     │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  [Doctor] ──→ [Dashboard] ──→ [FastAPI Backend]          │
+│                                      │                   │
+│                              ┌───────▼────────┐          │
+│                              │  AI Model      │          │
+│                              │  XGBoost+SHAP  │          │
+│                              │  76.62% acc    │          │
+│                              └───────┬────────┘          │
+│                                      │                   │
+│                    ┌─────────────────▼──────────────┐    │
+│                    │         Hash Generator          │    │
+│                    │  input_hash + output_hash       │    │
+│                    │  + explanation_hash (SHAP)      │    │
+│                    └──────┬──────────────┬───────────┘    │
+│                           │              │                │
+│              ┌────────────▼──┐    ┌──────▼───────────┐   │
+│              │  Hyperledger  │    │   Ethereum        │   │
+│              │  Fabric       │    │   Sepolia         │   │
+│              │  (Private)    │    │   (Public)        │   │
+│              │               │    │                   │   │
+│              │  - Full data  │    │  - TrustChainAudit│   │
+│              │  - Hospital   │    │  - MultiSig       │   │
+│              │  - Regulator  │    │  - Anyone verify  │   │
+│              └───────────────┘    └───────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Repository Structure
 
 ```
 TrustChain/
-├── api/
-│   └── app.py                        # Python FastAPI backend — connects AI to blockchain
+│
 ├── contracts/
 │   ├── ethereum/
-│   │   └── TrustChainAudit.sol       # Ethereum public audit trail (Solidity)
+│   │   ├── TrustChainAudit.sol        # Public audit trail — events, RBAC, validation
+│   │   └── TrustChainMultiSig.sol     # Multi-sig approval for HIGH RISK diagnoses
 │   └── fabric/
-│       └── trustchain.go             # Hyperledger Fabric chaincode (Golang)
-├── frontend/
-│   └── dashboard.html                # Auditor Dashboard UI
+│       └── trustchain.go              # Hyperledger Fabric chaincode (Go)
+│
 ├── ml/
-│   └── model.py                      # Healthcare AI disease prediction model (Python)
-├── docs/
-│   └── architecture.md               # Full system architecture
-└── requirements.txt                  # Python dependencies
+│   ├── model.py                       # XGBoost + SHAP diabetes prediction model
+│   ├── diabetes.csv                   # Pima Indians dataset (768 patients)
+│   └── plots/shap_importance.png      # SHAP feature importance visualization
+│
+├── api/
+│   ├── app.py                         # FastAPI backend — connects AI to blockchain
+│   └── test_api.py                    # 24 API endpoint tests
+│
+├── test/
+│   ├── TrustChain.test.js             # 29 Hardhat tests for TrustChainAudit
+│   └── TrustChainMultiSig.test.js     # 22 Hardhat tests for MultiSig contract
+│
+├── scripts/
+│   ├── deploy.js                      # Deploy TrustChainAudit to Sepolia
+│   └── deployMultiSig.js             # Deploy TrustChainMultiSig to Sepolia
+│
+├── frontend/
+│   └── dashboard.html                 # Live auditor dashboard (pulls from Etherscan)
+│
+└── trustchain_demo.py                 # End-to-end demo: 10 patients → blockchain
 ```
 
 ---
 
-## The Blockchain Network
+## Smart Contracts
 
-TrustChain runs a **hybrid two-blockchain architecture**:
+### TrustChainAudit.sol
+Public audit trail on Ethereum. Deployed and live.
 
-### Private Layer — Hyperledger Fabric
-
-| Organization | MSP ID | Role |
+| Function | Access | What it does |
 |---|---|---|
-| HospitalOrg | HospitalOrgMSP | Hospitals that run the AI model |
-| RegulatorOrg | RegulatorOrgMSP | Government health regulators |
-| AuditorOrg | AuditorOrgMSP | Independent auditors |
+| `registerModel()` | Owner only | Register a new AI model on-chain |
+| `logPrediction()` | Authorized | Record input hash + output hash + confidence |
+| `logModelEvent()` | Authorized | Record training/access events |
+| `logModelUpdate()` | Authorized | Record model version updates |
+| `grantAccess()` | Owner only | Authorize a hospital/actor |
+| `revokeAccess()` | Owner only | Revoke an actor's access |
+| `queryAuditTrail()` | Public | Read full audit history for a model |
 
-**Endorsement Policy:**
-```
-AND('HospitalOrgMSP.peer', 'RegulatorOrgMSP.peer')
-```
-Both a hospital peer AND a regulator peer must sign off on every transaction before it gets committed to the ledger.
+**Security features:** `onlyOwner`, `onlyAuthorized`, `modelExists` modifiers. Input validation on all functions. Custom revert messages.
 
-All organizations share a single channel called `trustchain-channel`.
+### TrustChainMultiSig.sol ⭐ NEW
+Multi-signature approval system for high-risk diagnoses. Nobody else has this.
 
-### Public Layer — Ethereum
+| Function | Access | What it does |
+|---|---|---|
+| `requestApproval()` | Any | Submit HIGH RISK diagnosis for approval (confidence ≥ 75%) |
+| `signDiagnosis()` | Authorized Doctors | Sign or reject an approval request |
+| `authorizeDoctor()` | Owner | Authorize a doctor to sign |
+| `getPendingRequests()` | Public | View all pending approvals |
+| `getPatientHistory()` | Public | View approval history for a patient |
 
-- Immutable public record of all AI audit events
-- Anyone in the world can verify the audit trail
-- No single organization controls it
-- Cryptographic proof that the private Fabric chain was not tampered with
-
----
-
-## The Smart Contracts
-
-### Hyperledger Fabric Chaincode (`contracts/fabric/trustchain.go`)
-
-Written in Go using the `fabric-contract-api-go` SDK.
-
-| Function | What it does |
-|---|---|
-| `RegisterModel` | Registers a new AI model on the private ledger |
-| `LogModelEvent` | Records training events (data ingestion, config changes) |
-| `LogPrediction` | Records every AI diagnosis — input hash, output hash, confidence |
-| `LogModelUpdate` | Records when the AI model is retrained or updated |
-| `QueryAuditTrail` | Returns full audit history for a model |
-| `RevokeAccess` | Removes an actor's permission to use the model |
-
-**World State Storage:**
-
-| Key Pattern | What's Stored |
-|---|---|
-| `MODEL_<modelID>` | `{modelName, version, owner, createdAt, isActive}` |
-| `EVENT_<modelID>_<txID>` | `{eventType, timestamp, actorID, dataHash}` |
-
-### Ethereum Smart Contract (`contracts/ethereum/TrustChainAudit.sol`)
-
-Written in Solidity `^0.8.20`.
-
-| Function | What it does |
-|---|---|
-| `registerModel()` | Registers AI model on public chain |
-| `logModelEvent()` | Records training events publicly |
-| `logPrediction()` | Records prediction proof publicly |
-| `logModelUpdate()` | Records model version changes |
-| `revokeAccess()` | Revokes actor access |
-| `queryAuditTrail()` | Returns public audit history |
-
-**Events emitted on-chain:**
-- `AuditLogged` — fired on every audit event
-- `ModelRegistered` — fired when a new model is registered
-- `AccessRevoked` — fired when access is removed
-- `ModelUpdated` — fired when model version changes
+**Auto-finalizes** when 2 signatures collected. **Auto-rejects** if any doctor votes no.
 
 ---
 
 ## The AI Model
 
-The ML layer uses a **disease prediction classifier** trained on real healthcare datasets.
+**Algorithm:** XGBoost with SHAP (SHapley Additive exPlanations)
+**Dataset:** Pima Indians Diabetes Dataset — 768 real patients
+**Accuracy:** 76.62% | **ROC-AUC:** 81.89%
 
-Before any prediction hits the blockchain, the API:
-1. Receives patient features (age, blood sugar, BMI, etc.)
-2. Runs the prediction model
-3. Gets a diagnosis + confidence score (0–100%)
-4. **Hashes the input and output** (SHA-256) — never stores raw patient data
-5. Sends the hashes to both blockchains
+**Feature Engineering:**
+- `Glucose_BMI` — Combined metabolic risk indicator
+- `Insulin_Resistance` — Derived insulin resistance score
+- `Age_Risk` — Age-weighted risk factor
+- `Metabolic_Score` — Overall metabolic health score
 
-This ensures **HIPAA compliance** — patient data is never stored on-chain, only cryptographic proof.
+**For each prediction, TrustChain records 3 hashes:**
+1. `input_hash` — Proof of what data the AI received
+2. `output_hash` — Proof of what the AI decided
+3. `explanation_hash` — Proof of why (SHAP reasoning)
+
+---
+
+## Test Coverage
+
+```
+npx hardhat test
+
+  TrustChainAudit        29 passing
+  TrustChainMultiSig     22 passing
+  ─────────────────────────────────
+  Total Hardhat tests    51 passing ✅
+
+python -m pytest api/test_api.py -v
+
+  API Endpoint Tests     24 passing ✅
+  ─────────────────────────────────
+  Total Tests            75 passing ✅
+```
+
+**Test categories:**
+- Model registration + access control
+- Prediction logging + confidence validation
+- Multi-sig approval flow (sign, reject, finalize)
+- Edge cases: duplicate signatures, unauthorized access, non-existent models
+- API validation: missing fields, invalid inputs, error handling
+
+---
+
+## Quick Start
+
+### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- Go 1.21+
+- Docker + Docker Compose
+
+### 1. Install dependencies
+```bash
+npm install
+pip install -r requirements.txt
+```
+
+### 2. Set environment variable
+```bash
+export PRIVATE_KEY="your_wallet_private_key"
+```
+
+### 3. Compile contracts
+```bash
+npx hardhat compile
+```
+
+### 4. Run all tests
+```bash
+npx hardhat test
+python -m pytest api/test_api.py -v
+```
+
+### 5. Deploy to Sepolia
+```bash
+npx hardhat run scripts/deploy.js --network sepolia
+npx hardhat run scripts/deployMultiSig.js --network sepolia
+```
+
+### 6. Run end-to-end demo
+```bash
+python trustchain_demo.py
+```
+
+### 7. Open dashboard
+Open `frontend/dashboard.html` in your browser.
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | What it does |
+```
+GET  /           → Health check + blockchain status
+GET  /health     → Detailed system health
+GET  /stats      → Total event count from Ethereum
+GET  /audit/{id} → Full audit trail for a model
+
+POST /model/register   → Register AI model on blockchain
+POST /prediction/log   → Log AI prediction (HIPAA compliant)
+POST /event/log        → Log training/access events
+POST /model/update     → Log model version update
+
+DELETE /access/revoke  → Revoke actor access
+```
+
+---
+
+## Stakeholder Roles
+
+| Stakeholder | Role | Blockchain Access |
 |---|---|---|
-| `GET` | `/` | Health check |
-| `POST` | `/model/register` | Registers a new AI model on both chains |
-| `POST` | `/prediction/log` | Logs AI prediction on both chains |
-| `POST` | `/event/log` | Logs training/access events |
-| `POST` | `/model/update` | Logs model version update |
-| `GET` | `/audit/{modelID}` | Returns full audit trail from Fabric |
-| `DELETE` | `/model/revoke` | Revokes actor access on both chains |
+| **Hospital** | Runs AI model, submits predictions | Fabric (write) + Ethereum (write) |
+| **Regulator** | Audits AI decisions, verifies compliance | Fabric (read) + Ethereum (read) |
+| **Auditor** | Monitors dashboard, queries history | Ethereum (read) |
+| **Doctor** | Signs high-risk diagnoses in MultiSig | Ethereum MultiSig (sign) |
+| **Patient** | Verifies their diagnosis on Etherscan | Ethereum (read, public) |
 
 ---
 
-## Dependencies & Setup
+## Team — Group 14
 
-### Prerequisites
-
-- Python 3.11+
-- Go 1.21+
-- Node.js 18+
-- Docker & Docker Compose
-- Hyperledger Fabric v2.5 binaries
-- MetaMask (for Ethereum testing)
-
-### Install Python Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Install Hyperledger Fabric Binaries
-
-```bash
-curl -sSL https://bit.ly/2ysbOFE | bash -s
-```
-
-### Install Ethereum Dev Tools
-
-```bash
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
-```
-
----
-
-## How to Deploy
-
-> ⚠️ Full deployment in progress. This is a high-level guide.
-
-### 1. Start the Fabric Network
-
-```bash
-cd network
-./scripts/start_network.sh
-./scripts/deploy_chaincode.sh
-```
-
-This generates crypto material, spins up Docker containers (orderer, peers), creates `trustchain-channel`, joins all peers, and deploys the chaincode.
-
-### 2. Deploy Ethereum Smart Contract
-
-```bash
-cd contracts/ethereum
-npx hardhat compile
-npx hardhat run scripts/deploy.js --network localhost
-```
-
-### 3. Start the Backend API
-
-```bash
-pip install -r requirements.txt
-uvicorn api.app:app --reload --port 8000
-```
-
-API docs available at: `http://localhost:8000/docs`
-
-### 4. Open the Dashboard
-
-Open `frontend/dashboard.html` in your browser and connect to the API at `http://localhost:8000`.
-
-### Tear Down
-
-```bash
-cd network
-docker-compose down -v
-```
-
----
-
-## Environment Variables
-
-| Variable | Default | What it controls |
-|---|---|---|
-| `FABRIC_PEER_ENDPOINT` | `localhost:7051` | gRPC endpoint for Fabric peer |
-| `FABRIC_CRYPTO_PATH` | `network/crypto-config/...` | Path to MSP crypto material |
-| `ETH_RPC_URL` | `http://localhost:8545` | Ethereum RPC endpoint |
-| `CONTRACT_ADDRESS` | — | Deployed Ethereum contract address |
-| `PORT` | `8000` | FastAPI server port |
-
----
-
-## Usage Examples
-
-### Register a new AI model
-```bash
-curl -X POST http://localhost:8000/model/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "modelID": "diabetes-v1",
-    "modelName": "DiabetesDetector",
-    "version": "1.0.0",
-    "owner": "hospital-org-1"
-  }'
-```
-
-### Log an AI prediction
-```bash
-curl -X POST http://localhost:8000/prediction/log \
-  -H "Content-Type: application/json" \
-  -d '{
-    "modelID": "diabetes-v1",
-    "inputHash": "0xabc123...",
-    "outputHash": "0xdef456...",
-    "confidence": 87
-  }'
-```
-
-### Query the full audit trail
-```bash
-curl http://localhost:8000/audit/diabetes-v1
-```
-Returns every event recorded for this model — predictions, training runs, updates, access — with timestamps and transaction hashes.
-
-### Revoke access
-```bash
-curl -X DELETE http://localhost:8000/model/revoke \
-  -H "Content-Type: application/json" \
-  -d '{
-    "modelID": "diabetes-v1",
-    "actorID": "hospital-org-2"
-  }'
-```
-
----
-
-## Production Considerations
-
-- **TLS** — Local setup uses self-signed certs. In production, use Hyperledger Fabric CA for proper certificates.
-- **Multiple Orderers** — We run a single Raft node locally. Production should have 3 or 5 orderers across different hosts.
-- **Separate Hosts** — Each org's peer and CA should run on its own infrastructure.
-- **API Authentication** — Add JWT middleware before exposing the backend publicly.
-- **HIPAA Compliance** — Raw patient data is never stored on-chain. Only SHA-256 hashes are recorded.
-- **Model Retraining** — Re-run `ml/model.py` training script after updating the dataset.
-- **Monitoring** — Add Prometheus metrics and use Fabric's built-in operations endpoints for peer health.
-
----
-
-## Team Members
-
-| Name | ASU ID | Role |
+| Name | ID | Role |
 |---|---|---|
 | Navin Balaji Elangchezhiyan | 1237671918 | Blockchain Developer (Ethereum / Solidity) |
 | Harish Anand | 1237366951 | AI/ML Engineer (Healthcare AI Model) |
@@ -315,4 +336,9 @@ curl -X DELETE http://localhost:8000/model/revoke \
 ---
 
 ## License
-MIT License — for academic use, CSE 540, Arizona State University.
+
+MIT License — Academic use, CSE 540, Arizona State University, Spring B 2026.
+
+---
+
+*Built with ❤️ by Group 14 — because healthcare AI needs to be accountable.*
