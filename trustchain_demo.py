@@ -1,5 +1,7 @@
+﻿from dotenv import load_dotenv
+load_dotenv()
 """
-TrustChain — Full End-to-End Integration Demo
+TrustChain â€” Full End-to-End Integration Demo
 ===============================================
 Flow:
     1. Doctor enters patient data
@@ -58,8 +60,8 @@ CONTRACT_ABI = [
 
 PATIENTS = [
     {
-        "name": "Sarah, 50yr — High Risk",
-        "icon": "🔴",
+        "name": "Sarah, 50yr â€” High Risk",
+        "icon": "ðŸ”´",
         "role": "Patient",
         "data": {
             "pregnancies": 6, "glucose": 148, "blood_pressure": 72,
@@ -68,8 +70,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "John, 31yr — Low Risk",
-        "icon": "🟢",
+        "name": "John, 31yr â€” Low Risk",
+        "icon": "ðŸŸ¢",
         "role": "Patient",
         "data": {
             "pregnancies": 1, "glucose": 85, "blood_pressure": 66,
@@ -78,8 +80,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "Maria, 45yr — Medium Risk",
-        "icon": "🟡",
+        "name": "Maria, 45yr â€” Medium Risk",
+        "icon": "ðŸŸ¡",
         "role": "Patient",
         "data": {
             "pregnancies": 3, "glucose": 120, "blood_pressure": 70,
@@ -88,8 +90,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "David, 62yr — Very High Risk",
-        "icon": "🔴",
+        "name": "David, 62yr â€” Very High Risk",
+        "icon": "ðŸ”´",
         "role": "Patient",
         "data": {
             "pregnancies": 8, "glucose": 183, "blood_pressure": 64,
@@ -98,8 +100,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "Emma, 25yr — Healthy",
-        "icon": "🟢",
+        "name": "Emma, 25yr â€” Healthy",
+        "icon": "ðŸŸ¢",
         "role": "Patient",
         "data": {
             "pregnancies": 0, "glucose": 90, "blood_pressure": 60,
@@ -108,8 +110,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "Robert, 55yr — High Risk",
-        "icon": "🔴",
+        "name": "Robert, 55yr â€” High Risk",
+        "icon": "ðŸ”´",
         "role": "Patient",
         "data": {
             "pregnancies": 5, "glucose": 166, "blood_pressure": 72,
@@ -118,8 +120,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "Lisa, 35yr — Low Risk",
-        "icon": "🟢",
+        "name": "Lisa, 35yr â€” Low Risk",
+        "icon": "ðŸŸ¢",
         "role": "Patient",
         "data": {
             "pregnancies": 2, "glucose": 95, "blood_pressure": 68,
@@ -128,8 +130,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "James, 48yr — Medium Risk",
-        "icon": "🟡",
+        "name": "James, 48yr â€” Medium Risk",
+        "icon": "ðŸŸ¡",
         "role": "Patient",
         "data": {
             "pregnancies": 4, "glucose": 130, "blood_pressure": 75,
@@ -138,8 +140,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "Priya, 40yr — Borderline",
-        "icon": "🟡",
+        "name": "Priya, 40yr â€” Borderline",
+        "icon": "ðŸŸ¡",
         "role": "Patient",
         "data": {
             "pregnancies": 2, "glucose": 115, "blood_pressure": 65,
@@ -148,8 +150,8 @@ PATIENTS = [
         }
     },
     {
-        "name": "Michael, 70yr — Very High Risk",
-        "icon": "🔴",
+        "name": "Michael, 70yr â€” Very High Risk",
+        "icon": "ðŸ”´",
         "role": "Patient",
         "data": {
             "pregnancies": 10, "glucose": 197, "blood_pressure": 70,
@@ -165,19 +167,19 @@ PATIENTS = [
 
 def connect():
     print("\n" + "="*60)
-    print("  TrustChain — Connecting to Ethereum Sepolia")
+    print("  TrustChain â€” Connecting to Ethereum Sepolia")
     print("="*60)
     w3 = Web3(Web3.HTTPProvider(RPC_URL))
     if w3.is_connected():
-        print(f"✅ Connected! Block: {w3.eth.block_number}")
+        print(f"âœ… Connected! Block: {w3.eth.block_number}")
     else:
-        print("❌ Connection failed!")
+        print("âŒ Connection failed!")
         sys.exit(1)
     contract = w3.eth.contract(
         address=Web3.to_checksum_address(CONTRACT_ADDRESS),
         abi=CONTRACT_ABI
     )
-    print(f"✅ Contract: {CONTRACT_ADDRESS}")
+    print(f"âœ… Contract: {CONTRACT_ADDRESS}")
     return w3, contract
 
 # ---------------------------------------------------------------
@@ -202,14 +204,14 @@ def log_prediction(w3, contract, model_id, result):
         })
         signed  = w3.eth.account.sign_transaction(tx, PRIVATE_KEY)
         tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
-        print(f"   📡 Tx sent: {tx_hash.hex()[:20]}...")
+        print(f"   ðŸ“¡ Tx sent: {tx_hash.hex()[:20]}...")
         receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
         if receipt['status'] == 1:
-            print(f"   ✅ Confirmed in block {receipt['blockNumber']}!")
-            print(f"   🔗 https://sepolia.etherscan.io/tx/{tx_hash.hex()}")
+            print(f"   âœ… Confirmed in block {receipt['blockNumber']}!")
+            print(f"   ðŸ”— https://sepolia.etherscan.io/tx/{tx_hash.hex()}")
         return tx_hash.hex()
     except Exception as e:
-        print(f"   ❌ Error: {str(e)[:60]}")
+        print(f"   âŒ Error: {str(e)[:60]}")
         return None
 
 # ---------------------------------------------------------------
@@ -217,10 +219,10 @@ def log_prediction(w3, contract, model_id, result):
 # ---------------------------------------------------------------
 
 def run_demo():
-    print("\n" + "🔗"*30)
-    print("\n  TrustChain — Healthcare AI Audit Demo")
+    print("\n" + "ðŸ”—"*30)
+    print("\n  TrustChain â€” Healthcare AI Audit Demo")
     print("  10 Patients | XGBoost + SHAP | Ethereum")
-    print("\n" + "🔗"*30)
+    print("\n" + "ðŸ”—"*30)
 
     w3, contract = connect()
     MODEL_ID = "diabetes-xgboost-v1"
@@ -241,13 +243,13 @@ def run_demo():
         print(f"   Risk Score: {result['risk_score']}/100")
         print(f"   Risk Level: {result['risk_level']}")
 
-        print(f"\n   🧠 Top SHAP Factors:")
+        print(f"\n   ðŸ§  Top SHAP Factors:")
         for j, f in enumerate(result['top_factors'][:3], 1):
-            arrow = "↑" if f['contribution'] > 0 else "↓"
+            arrow = "â†‘" if f['contribution'] > 0 else "â†“"
             print(f"   {j}. {f['feature']:<25} {arrow} {f['direction']}")
 
         # Log to blockchain
-        print(f"\n   🔐 Logging to Ethereum...")
+        print(f"\n   ðŸ” Logging to Ethereum...")
         tx = log_prediction(w3, contract, MODEL_ID, result)
         if tx:
             tx_hashes.append(tx)
@@ -263,22 +265,23 @@ def run_demo():
 
     # Final Summary
     print(f"\n{'='*60}")
-    print(f"  ✅ TrustChain Demo Complete!")
+    print(f"  âœ… TrustChain Demo Complete!")
     print(f"{'='*60}")
 
-    print(f"\n📋 Prediction Summary:")
+    print(f"\nðŸ“‹ Prediction Summary:")
     print(f"   {'Patient':<35} {'Diagnosis':<15} {'Confidence':<12} {'Risk'}")
     print(f"   {'-'*70}")
     for r in results_summary:
         print(f"   {r['patient']:<35} {r['diagnosis']:<15} {r['confidence']:<12}% {r['risk']}")
 
-    print(f"\n🔗 All recorded on Ethereum:")
+    print(f"\nðŸ”— All recorded on Ethereum:")
     print(f"   Contract: https://sepolia.etherscan.io/address/{CONTRACT_ADDRESS}")
     print(f"\n   {len(tx_hashes)}/10 predictions logged to blockchain!")
-    print(f"\n✅ Every prediction permanently recorded!")
+    print(f"\nâœ… Every prediction permanently recorded!")
     print(f"   Cannot be deleted. Cannot be tampered with.")
     print(f"   Full audit trail available to regulators & auditors.")
 
 
 if __name__ == "__main__":
     run_demo()
+
